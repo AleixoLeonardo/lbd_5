@@ -16,7 +16,7 @@ public class JobValidator {
 	public void validateData(Job job, boolean isUpdate) {
 		List<String> invalidFields = new ArrayList<>();
 		if (null == job.getName()) {
-			invalidFields.add(String.format("%s %s", Field.JOB_NAME, ValidateMessage.EMPTY_FIELD.getDescription()));
+			invalidFields.add(String.format("%s %s", Field.JOB_NAME.getDescription(), ValidateMessage.EMPTY_FIELD.getDescription()));
 		}
 
 		if (isUpdate && null == job.getId()) {

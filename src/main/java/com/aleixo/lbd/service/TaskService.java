@@ -9,6 +9,8 @@ import javassist.NotFoundException;
 public interface TaskService {
 	public void save(Task task);
 
+	public Task findById(Integer id) throws com.aleixo.lbd.exception.NotFoundException;
+
 	public void delete(Integer id) throws NotFoundException;
 
 	public List<Task> findAll();

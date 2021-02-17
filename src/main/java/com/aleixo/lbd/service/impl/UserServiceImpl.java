@@ -55,4 +55,13 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
+	@Override
+	public User findById(Integer id) throws NotFoundException {
+		Optional<User> user = userRepository.findById(id);
+		if (user.isPresent()) {
+			return user.get();
+		}
+		throw new NotFoundException(ValidateMessage.NOT_FOUND.getDescription());
+	}
+
 }
