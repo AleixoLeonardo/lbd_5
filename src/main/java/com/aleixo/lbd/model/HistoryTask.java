@@ -48,6 +48,9 @@ public class HistoryTask implements Serializable {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Task taskId;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private User userId;
 
     public HistoryTask() {
     }
@@ -83,6 +86,14 @@ public class HistoryTask implements Serializable {
 
     public void setTaskId(Task taskId) {
         this.taskId = taskId;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     @Override
