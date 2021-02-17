@@ -9,6 +9,8 @@ import javassist.NotFoundException;
 public interface UserService {
 	public void save(User user);
 	
+	public User findById(Integer id) throws NotFoundException;
+	
 	public void delete(Integer id) throws NotFoundException;
 	
 	public List<User> findAll();

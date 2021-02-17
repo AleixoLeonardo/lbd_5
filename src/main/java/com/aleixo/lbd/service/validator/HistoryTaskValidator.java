@@ -15,15 +15,15 @@ public class HistoryTaskValidator {
 	public void validateData(HistoryTask historyTask, boolean isUpdate) {
 		List<String> invalidFields = new ArrayList<>();
 		if (null == historyTask.getHistoryDate()) {
-			invalidFields.add(String.format("%s %s", Field.HISTORY_TASK_DATE, ValidateMessage.EMPTY_FIELD.getDescription()));
+			invalidFields.add(String.format("%s %s", Field.HISTORY_TASK_DATE.getDescription(), ValidateMessage.EMPTY_FIELD.getDescription()));
 		}
 
 		if (null == historyTask.getTaskId()) {
-			invalidFields.add(String.format("%s %s", Field.HISTORY_TASK_TASK_ID, ValidateMessage.EMPTY_FIELD.getDescription()));
+			invalidFields.add(String.format("%s %s", Field.HISTORY_TASK_TASK_ID.getDescription(), ValidateMessage.EMPTY_FIELD.getDescription()));
 		}
 
 		if (null == historyTask.getUserId()) {
-			invalidFields.add(String.format("%s %s", Field.HISTORY_TASK_USER_ID, ValidateMessage.EMPTY_FIELD.getDescription()));
+			invalidFields.add(String.format("%s %s", Field.HISTORY_TASK_USER_ID.getDescription(), ValidateMessage.EMPTY_FIELD.getDescription()));
 		}
 
 		if (isUpdate && null == historyTask.getId()) {

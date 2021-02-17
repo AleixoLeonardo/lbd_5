@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aleixo.lbd.constants.ValidateMessage;
+import com.aleixo.lbd.exception.NotFoundException;
 import com.aleixo.lbd.model.Job;
 import com.aleixo.lbd.repository.JobRepository;
 import com.aleixo.lbd.service.JobService;
 import com.aleixo.lbd.service.validator.JobValidator;
 
-import javassist.NotFoundException;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -48,6 +48,15 @@ public class JobServiceImpl implements JobService {
 	public void update(Job job) {
 		jobValidator.validateData(job, false);
 		jobRepository.save(job);
+	}
+	
+	@Override
+	public Job findById(Integer id) throws NotFoundException {
+		Optional<Job> job  = jobRepository.findById(id);
+		if (job.isPresent()) {
+			return job.get();
+		}
+		throw new NotFoundException(ValidateMessage.NOT_FOUND.getDescription());
 	}
 
 }

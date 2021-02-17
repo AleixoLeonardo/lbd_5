@@ -7,12 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aleixo.lbd.constants.ValidateMessage;
+import com.aleixo.lbd.exception.NotFoundException;
 import com.aleixo.lbd.model.HistoryTask;
 import com.aleixo.lbd.repository.HistoryTaskRepository;
 import com.aleixo.lbd.service.HistoryTaskService;
 import com.aleixo.lbd.service.validator.HistoryTaskValidator;
-
-import javassist.NotFoundException;
 
 @Service
 public class HistoryTaskServiceImpl implements HistoryTaskService {
@@ -56,6 +55,15 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 		if (null != historyTaskList && !historyTaskList.isEmpty()) {
 			historyTaskRepository.deleteAll(historyTaskList);
 		}
+	}
+
+	@Override
+	public HistoryTask findById(Integer id) throws NotFoundException {
+		Optional<HistoryTask> historyTask = historyTaskRepository.findById(id);
+		if (historyTask.isPresent()) {
+			return historyTask.get();
+		}
+		throw new NotFoundException(ValidateMessage.NOT_FOUND.getDescription());
 	}
 
 }
