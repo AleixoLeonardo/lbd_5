@@ -7,7 +7,9 @@ package com.aleixo.lbd.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,10 +19,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -53,6 +57,8 @@ public class User implements Serializable {
     @Column(name = "birth_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date birthDate;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private List<HistoryTask> historyTaskList;
     @JoinColumn(name = "job_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Job jobId;
@@ -101,6 +107,15 @@ public class User implements Serializable {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
+    }
+
+    @XmlTransient
+    public List<HistoryTask> getHistoryTaskList() {
+        return historyTaskList;
+    }
+
+    public void setHistoryTaskList(List<HistoryTask> historyTaskList) {
+        this.historyTaskList = historyTaskList;
     }
 
     public Job getJobId() {
