@@ -7,10 +7,12 @@ package com.aleixo.lbd.model;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  *
  * @author Aleixo
@@ -28,6 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "job")
 @XmlRootElement
+@JsonIgnoreProperties("userList") 
 @NamedQueries({
     @NamedQuery(name = "Job.findAll", query = "SELECT j FROM Job j")
     , @NamedQuery(name = "Job.findById", query = "SELECT j FROM Job j WHERE j.id = :id")
@@ -43,9 +48,9 @@ public class Job implements Serializable {
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobId", fetch = FetchType.LAZY)
     private List<User> userList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobId", fetch = FetchType.LAZY)
     private List<TaskMtmJob> taskMtmJobList;
 
     public Job() {

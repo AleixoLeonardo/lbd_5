@@ -4,7 +4,8 @@ public enum ValidateMessage {
 
 	EMPTY_FIELD("field cannot be null"),
 	EMPTY_ID("field ID cannot be null "),
-	NOT_FOUND("data not found")
+	NOT_FOUND("data not found"),
+	PARSE_ERROR("Can't convert data")
 	;
 
 	private String description;

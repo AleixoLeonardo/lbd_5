@@ -1,5 +1,7 @@
 package com.aleixo.lbd.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.aleixo.lbd.constants.ValidateMessage;
 import com.aleixo.lbd.exception.NotFoundException;
+import com.aleixo.lbd.exception.ValidateException;
 import com.aleixo.lbd.model.HistoryTask;
 import com.aleixo.lbd.repository.HistoryTaskRepository;
 import com.aleixo.lbd.service.HistoryTaskService;
@@ -64,6 +67,16 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 			return historyTask.get();
 		}
 		throw new NotFoundException(ValidateMessage.NOT_FOUND.getDescription());
+	}
+
+	@Override
+	public List<HistoryTask> findByIdTaskPeriod(Integer taskId, String start, String end) throws NotFoundException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		try {
+			return historyTaskRepository.findAllByTaskIdPeriod(taskId, sdf.parse(start), sdf.parse(end));
+		} catch (ParseException e) {
+			throw new ValidateException(ValidateMessage.PARSE_ERROR.getDescription());
+		}
 	}
 
 }

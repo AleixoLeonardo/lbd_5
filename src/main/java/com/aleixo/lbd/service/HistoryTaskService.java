@@ -9,6 +9,8 @@ public interface HistoryTaskService {
 	public void save(HistoryTask historyTask);
 
 	public HistoryTask findById(Integer id) throws NotFoundException;
+	
+	public List<HistoryTask> findByIdTaskPeriod(Integer idTask, String start, String end) throws NotFoundException;
 
 	public void delete(Integer id) throws NotFoundException;
 

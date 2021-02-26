@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ public class JobController {
 	private JobService jobService;
 
 	@RequestMapping(path = "/", method = RequestMethod.POST)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> create(@RequestBody Job job) {
 		try {
 			jobService.save(job);
@@ -35,6 +37,7 @@ public class JobController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.PUT)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> update(@RequestBody Job job) {
 		try {
 			jobService.update(job);
@@ -45,11 +48,13 @@ public class JobController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<List<Job>> findAll() {
 		return new ResponseEntity<List<Job>>(jobService.findAll(), HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<Job> findById(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<Job>(jobService.findById(id), HttpStatus.OK);
@@ -59,6 +64,7 @@ public class JobController {
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		try {
 			jobService.delete(id);

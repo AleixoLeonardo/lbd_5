@@ -7,6 +7,7 @@ package com.aleixo.lbd.model;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +22,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  *
  * @author Aleixo
@@ -28,95 +31,96 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "task")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t")
-    , @NamedQuery(name = "Task.findById", query = "SELECT t FROM Task t WHERE t.id = :id")
-    , @NamedQuery(name = "Task.findByNome", query = "SELECT t FROM Task t WHERE t.nome = :nome")})
+@JsonIgnoreProperties({"historyTaskList", "taskMtmJobList"}) 
+@NamedQueries({ @NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t"),
+		@NamedQuery(name = "Task.findById", query = "SELECT t FROM Task t WHERE t.id = :id"),
+		@NamedQuery(name = "Task.findByName", query = "SELECT t FROM Task t WHERE t.name = :name") })
 public class Task implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Basic(optional = false)
-    @Column(name = "nome")
-    private String nome;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
-    private List<HistoryTask> historyTaskList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
-    private List<TaskMtmJob> taskMtmJobList;
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "id")
+	private Integer id;
+	@Basic(optional = false)
+	@Column(name = "name")
+	private String name;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
+	private List<HistoryTask> historyTaskList;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
+	private List<TaskMtmJob> taskMtmJobList;
 
-    public Task() {
-    }
+	public Task() {
+	}
 
-    public Task(Integer id) {
-        this.id = id;
-    }
+	public Task(Integer id) {
+		this.id = id;
+	}
 
-    public Task(Integer id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
+	public Task(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getNome() {
-        return nome;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @XmlTransient
-    public List<HistoryTask> getHistoryTaskList() {
-        return historyTaskList;
-    }
+	@XmlTransient
+	public List<HistoryTask> getHistoryTaskList() {
+		return historyTaskList;
+	}
 
-    public void setHistoryTaskList(List<HistoryTask> historyTaskList) {
-        this.historyTaskList = historyTaskList;
-    }
+	public void setHistoryTaskList(List<HistoryTask> historyTaskList) {
+		this.historyTaskList = historyTaskList;
+	}
 
-    @XmlTransient
-    public List<TaskMtmJob> getTaskMtmJobList() {
-        return taskMtmJobList;
-    }
+	@XmlTransient
+	public List<TaskMtmJob> getTaskMtmJobList() {
+		return taskMtmJobList;
+	}
 
-    public void setTaskMtmJobList(List<TaskMtmJob> taskMtmJobList) {
-        this.taskMtmJobList = taskMtmJobList;
-    }
+	public void setTaskMtmJobList(List<TaskMtmJob> taskMtmJobList) {
+		this.taskMtmJobList = taskMtmJobList;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Task)) {
-            return false;
-        }
-        Task other = (Task) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are not set
+		if (!(object instanceof Task)) {
+			return false;
+		}
+		Task other = (Task) object;
+		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "br.com.fd.habiliteme.manager.model.Task[ id=" + id + " ]";
-    }
-    
+	@Override
+	public String toString() {
+		return "br.com.fd.habiliteme.manager.model.Task[ id=" + id + " ]";
+	}
+
 }
+

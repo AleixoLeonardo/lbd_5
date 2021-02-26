@@ -1,5 +1,6 @@
 package com.aleixo.lbd.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,15 @@ public interface HistoryTaskRepository extends CrudRepository<HistoryTask, Integ
 	@Query(value = "SELECT h FROM HistoryTask h")
 	List<HistoryTask> findAllHistoryTasks();
 
-	@Query(value = "SELECT h FROM HistoryTask h WHERE h.userId = :userId")
+	@Query(value = "SELECT h FROM HistoryTask h WHERE h.userId.id = :userId")
 	List<HistoryTask> findAllHistoryTasksByUser(@Param("userId") Integer userId);
+
+	@Query(value = "SELECT h FROM HistoryTask h WHERE h.taskId.id = :taskId AND h.historyDate >= :start AND h.historyDate <= :end")
+	List<HistoryTask> findAllByTaskIdPeriod(@Param("taskId") Integer taskId, Date start, Date end);
+	
+	@Query(value = "SELECT h FROM HistoryTask h WHERE h.userId.role = :role")
+	List<HistoryTask> findAllByRole(@Param("role") String role);
+	
+	@Query(value = "SELECT h FROM HistoryTask h JOIN h.taskId.taskMtmJobList tmj WHERE tmj.jobId.id = :jobId")
+	List<HistoryTask> findAllByJob(@Param("jobId") Integer jobId);
 }

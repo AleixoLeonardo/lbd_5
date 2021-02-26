@@ -8,6 +8,7 @@ class Lbd5ApplicationTests {
 
 	@Test
 	void contextLoads() {
+		//
 	}
 
 }

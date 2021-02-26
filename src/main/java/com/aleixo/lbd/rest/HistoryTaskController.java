@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ public class HistoryTaskController {
 	private HistoryTaskService historyTaskService;
 
 	@RequestMapping(path = "/", method = RequestMethod.POST)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> create(@RequestBody HistoryTask historyTask) {
 		try {
 			historyTaskService.save(historyTask);
@@ -35,6 +37,7 @@ public class HistoryTaskController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.PUT)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> update(@RequestBody HistoryTask historyTask) {
 		try {
 			historyTaskService.update(historyTask);
@@ -45,11 +48,13 @@ public class HistoryTaskController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<List<HistoryTask>> findAll() {
 		return new ResponseEntity<List<HistoryTask>>(historyTaskService.findAll(), HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<HistoryTask> findById(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<HistoryTask>(historyTaskService.findById(id), HttpStatus.OK);
@@ -58,7 +63,20 @@ public class HistoryTaskController {
 		}
 	}
 
+	@RequestMapping(path = "/{idTask}/inicio/{start}/fim/{end}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<List<HistoryTask>> findByIdTaskPeriod(@PathVariable Integer idTask,
+			@PathVariable String start, @PathVariable String end) {
+		try {
+			return new ResponseEntity<List<HistoryTask>>(historyTaskService.findByIdTaskPeriod(idTask, start, end),
+					HttpStatus.OK);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+		}
+	}
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		try {
 			historyTaskService.delete(id);

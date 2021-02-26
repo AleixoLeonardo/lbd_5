@@ -15,7 +15,7 @@ public class TaskValidator {
 
 	public void validateData(Task task, boolean isUpdate) {
 		List<String> invalidFields = new ArrayList<>();
-		if (null == task.getNome()) {
+		if (null == task.getName()) {
 			invalidFields.add(String.format("%s %s", Field.TASK_NAME.getDescription(), ValidateMessage.EMPTY_FIELD.getDescription()));
 		}
 
