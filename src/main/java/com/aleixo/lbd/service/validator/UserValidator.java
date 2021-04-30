@@ -36,7 +36,7 @@ public class UserValidator {
 			invalidFields.add(String.format("%s", ValidateMessage.EMPTY_ID.getDescription()));
 		}
 
-		if (isUpdate && null == user.getPassword()) {
+		if (!isUpdate && null == user.getPassword()) {
 			invalidFields.add(String.format("%s %s", Field.USER_PASSWORD.getDescription(),
 					ValidateMessage.EMPTY_FIELD.getDescription()));
 		}

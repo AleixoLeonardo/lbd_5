@@ -1,18 +1,17 @@
 package com.aleixo.lbd.security;
 
-public class UserAuthenticate {
+public class Login {
 	private String username;
 	private String password;
 	private String token;
-	private String role;
+	private String autorizacao;
 
-	
-	
-	public UserAuthenticate(String username, String token, String role) {
-		super();
-		this.username = username;
-		this.token = token;
-		this.role = role;
+	public String getAutorizacao() {
+		return autorizacao;
+	}
+
+	public void setAutorizacao(String autorizacao) {
+		this.autorizacao = autorizacao;
 	}
 
 	public String getToken() {
@@ -21,14 +20,6 @@ public class UserAuthenticate {
 
 	public void setToken(String token) {
 		this.token = token;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 
 	public String getUsername() {
@@ -46,4 +37,5 @@ public class UserAuthenticate {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 }

@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +31,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
-	
+
 	@Override
 	public void save(User user) {
 		userValidator.validateData(user, false);
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void delete(Integer id) throws NotFoundException {
 		Optional<User> user = userRepository.findById(id);
 		if (user.isPresent()) {
@@ -52,17 +55,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<User> findAll() {
 		return userRepository.findAllUsers();
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void update(User user) {
 		userValidator.validateData(user, true);
 		userRepository.save(user);
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public User findById(Integer id) throws NotFoundException {
 		Optional<User> user = userRepository.findById(id);
 		if (user.isPresent()) {
@@ -72,6 +78,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public User findByName(String name) throws NotFoundException {
 		Optional<User> user = userRepository.findByName(name);
 		if (user.isPresent()) {
@@ -81,14 +88,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public UserDetails findByNameAuthenticate(String name) throws NotFoundException {
 		Optional<User> user = userRepository.findByName(name);
 		if (user.isPresent()) {
-			
+
 			return new org.springframework.security.core.userdetails.User(user.get().getName(),
 					user.get().getPassword(), new ArrayList<>());
 		}
 		throw new NotFoundException(ValidateMessage.NOT_FOUND.getDescription());
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Optional<User> user = userRepository.findByName(username);
+		if (!user.isPresent()) {
+			throw new UsernameNotFoundException(ValidateMessage.NOT_FOUND.getDescription());
+		}
+		UserDetails userDetail =
+				 org.springframework.security.core.userdetails.User.builder().username(user.get().getName())
+					.password(user.get().getPassword()).authorities(user.get().getRole()).build();
+		return userDetail;
 	}
 
 }

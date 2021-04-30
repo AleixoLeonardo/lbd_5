@@ -13,6 +13,8 @@ public interface HistoryTaskService {
 	public List<HistoryTask> findByIdTaskPeriod(Integer idTask, String start, String end) throws NotFoundException;
 
 	public void delete(Integer id) throws NotFoundException;
+	
+	public void delete(List<HistoryTask> historyTaskList) throws NotFoundException;
 
 	public List<HistoryTask> findAll();
 

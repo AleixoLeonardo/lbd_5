@@ -79,4 +79,9 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 		}
 	}
 
+	@Override
+	public void delete(List<HistoryTask> historyTaskList) throws NotFoundException {
+		historyTaskRepository.deleteAll(historyTaskList);
+	}
+
 }

@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +23,10 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.aleixo.lbd.rest.view.TaskMtmJobView;
+import com.aleixo.lbd.rest.view.TaskView;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  *
@@ -40,15 +44,18 @@ public class Task implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonView({ TaskView.TaskResume.class})
 	@Basic(optional = false)
 	@Column(name = "id")
 	private Integer id;
 	@Basic(optional = false)
 	@Column(name = "name")
+	@JsonView(TaskView.TaskResume.class)
 	private String name;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
 	private List<HistoryTask> historyTaskList;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId", fetch = FetchType.EAGER)
+	@JsonView({TaskView.TaskFull.class, TaskMtmJobView.TaskMtmJobFull.class})
 	private List<TaskMtmJob> taskMtmJobList;
 
 	public Task() {

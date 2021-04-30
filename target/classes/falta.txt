@@ -1,0 +1,2 @@
+b. Autorização por anotações (não anotar Controllers). Utilizar, no mínimo,
+dois níveis de autorização (Usuário e Administrador)

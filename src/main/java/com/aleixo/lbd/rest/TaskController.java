@@ -15,18 +15,20 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.aleixo.lbd.exception.ValidateException;
 import com.aleixo.lbd.model.Task;
+import com.aleixo.lbd.rest.view.TaskView;
 import com.aleixo.lbd.service.TaskService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("/task")
+@CrossOrigin()
 public class TaskController {
 	@Autowired
 	private TaskService taskService;
 
 	@RequestMapping(path = "/", method = RequestMethod.POST)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> create(@RequestBody Task task) {
 		try {
 			taskService.save(task);
@@ -37,7 +39,6 @@ public class TaskController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.PUT)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> update(@RequestBody Task task) {
 		try {
 			taskService.update(task);
@@ -48,13 +49,13 @@ public class TaskController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
-	@CrossOrigin(origins = "*")
+	@JsonView(TaskView.TaskResume.class)
 	public ResponseEntity<List<Task>> findAll() {
 		return new ResponseEntity<List<Task>>(taskService.findAll(), HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	@CrossOrigin(origins = "*")
+	@JsonView(TaskView.TaskFull.class)
 	public ResponseEntity<Task> findById(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<Task>(taskService.findById(id), HttpStatus.OK);

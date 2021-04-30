@@ -30,7 +30,6 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.aleixo.lbd.rest.view.UserView;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
@@ -66,8 +65,8 @@ public class User implements Serializable {
 	@Column(name = "cpf")
 	private String cpf;
 
-	@JsonView(UserView.UserResume.class)
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	@JsonView(UserView.UserFull.class)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Basic(optional = false)
 	@Column(name = "birth_date")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -82,13 +81,13 @@ public class User implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.LAZY)
 	private List<HistoryTask> historyTaskList;
 
-	@JsonView(UserView.UserResume.class)
+	@JsonView(UserView.UserFull.class)
 	@JoinColumn(name = "job_id", referencedColumnName = "id")
 	@ManyToOne(optional = false)
 	private Job jobId;
 
-	@JsonIgnore
 	@Basic(optional = false)
+	@JsonView({UserView.UserFullPassword.class})
 	@Column(name = "password")
 	private String password;
 

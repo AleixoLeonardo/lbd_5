@@ -16,17 +16,19 @@ import org.springframework.web.server.ResponseStatusException;
 import com.aleixo.lbd.exception.NotFoundException;
 import com.aleixo.lbd.exception.ValidateException;
 import com.aleixo.lbd.model.Job;
+import com.aleixo.lbd.rest.view.JobView;
 import com.aleixo.lbd.service.JobService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 
 @RestController
 @RequestMapping("/job")
+@CrossOrigin()
 public class JobController {
 	@Autowired
 	private JobService jobService;
 
 	@RequestMapping(path = "/", method = RequestMethod.POST)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> create(@RequestBody Job job) {
 		try {
 			jobService.save(job);
@@ -37,7 +39,6 @@ public class JobController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.PUT)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> update(@RequestBody Job job) {
 		try {
 			jobService.update(job);
@@ -48,13 +49,13 @@ public class JobController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
-	@CrossOrigin(origins = "*")
+	@JsonView(JobView.JobFull.class)
 	public ResponseEntity<List<Job>> findAll() {
 		return new ResponseEntity<List<Job>>(jobService.findAll(), HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	@CrossOrigin(origins = "*")
+	@JsonView(JobView.JobFull.class)
 	public ResponseEntity<Job> findById(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<Job>(jobService.findById(id), HttpStatus.OK);
@@ -64,7 +65,6 @@ public class JobController {
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		try {
 			jobService.delete(id);

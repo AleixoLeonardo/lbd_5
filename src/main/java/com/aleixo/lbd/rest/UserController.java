@@ -23,13 +23,13 @@ import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin()
 public class UserController {
 
 	@Autowired
 	private UserService userService;
 
 	@RequestMapping(path = "/", method = RequestMethod.POST)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> create(@RequestBody User user) {
 		try {
 			userService.save(user);
@@ -40,7 +40,6 @@ public class UserController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.PUT)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> update(@RequestBody User user) {
 		try {
 			userService.update(user);
@@ -51,15 +50,14 @@ public class UserController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
-	@CrossOrigin(origins = "*")
-	@JsonView(UserView.UserResume.class)
+	@JsonView(UserView.UserFull.class)
 	public ResponseEntity<List<User>> findAll() {
 		return new ResponseEntity<List<User>>(userService.findAll(), HttpStatus.OK);
 	}
 
-	@JsonView(UserView.UserFull.class)
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	@CrossOrigin(origins = "*")
+	@JsonView(UserView.UserFull.class)
 	public ResponseEntity<User> findById(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<User>(userService.findById(id), HttpStatus.OK);
@@ -69,7 +67,6 @@ public class UserController {
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-	@CrossOrigin(origins = "*")
 	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		try {
 			userService.delete(id);

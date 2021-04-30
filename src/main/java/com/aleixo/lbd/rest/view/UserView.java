@@ -10,5 +10,9 @@ public class UserView {
 
 	public static class AuthorizationResume {
 	}
+	
+	public static class UserFullPassword extends UserFull {
+		
+	}
 
 }
