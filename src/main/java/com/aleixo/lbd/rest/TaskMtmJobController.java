@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.aleixo.lbd.exception.NotFoundException;
 import com.aleixo.lbd.model.TaskMtmJob;
 import com.aleixo.lbd.rest.view.TaskMtmJobView;
 import com.aleixo.lbd.service.TaskMtmJobService;
 import com.fasterxml.jackson.annotation.JsonView;
+
 
 @RestController
 @RequestMapping("/task_mtm_job")
@@ -33,6 +35,16 @@ public class TaskMtmJobController {
 			return new ResponseEntity<List<TaskMtmJob>>(taskMtmJobService.findByTask(idTask), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+		}
+	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> delete(@PathVariable Integer id) {
+		try {
+			taskMtmJobService.delete(id);
+			return new ResponseEntity<String>("", HttpStatus.OK);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 }

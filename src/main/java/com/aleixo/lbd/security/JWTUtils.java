@@ -27,6 +27,7 @@ public class JWTUtils {
 		usuarioSemSenha.setUsername(usuario.getName());
 		if (!user.getRole().isEmpty()) {
 			usuarioSemSenha.setAutorizacao(user.getRole());
+			usuarioSemSenha.setId(user.getId());
 		}
 		String usuarioJson = mapper.writeValueAsString(usuarioSemSenha);
 		Date agora = new Date();

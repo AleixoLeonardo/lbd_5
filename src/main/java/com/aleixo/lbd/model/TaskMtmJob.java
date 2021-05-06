@@ -7,7 +7,7 @@ package com.aleixo.lbd.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.aleixo.lbd.rest.view.TaskMtmJobView;
@@ -38,21 +39,24 @@ public class TaskMtmJob implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Basic(optional = false)
 	@JsonView({ TaskView.TaskFull.class, TaskMtmJobView.TaskMtmJobFull.class })
 	@Column(name = "id")
 	private Integer id;
+	@JsonView({ TaskView.TaskFull.class, TaskMtmJobView.TaskMtmJobFull.class })
 	@JoinColumn(name = "job_id", referencedColumnName = "id")
-	@ManyToOne(optional = false)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	private Job jobId;
+	@JsonView({ TaskView.TaskResume.class, TaskMtmJobView.TaskMtmJobFull.class })
 	@JoinColumn(name = "task_id", referencedColumnName = "id")
-	@ManyToOne(optional = false)
+	@ManyToOne()
 	private Task taskId;
 
 	@JsonView({ TaskView.TaskFull.class, TaskMtmJobView.TaskMtmJobFull.class })
-	transient Integer job;
+	@Transient
+	Integer job;
 
 	@JsonView({ TaskView.TaskFull.class, TaskMtmJobView.TaskMtmJobFull.class })
+	@Transient
 	transient Integer task;
 
 	public TaskMtmJob() {

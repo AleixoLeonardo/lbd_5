@@ -27,11 +27,12 @@ public class TaskServiceImpl implements TaskService {
 
 	@Autowired
 	private HistoryTaskService historyTaskService;
-
+	
 	@Override
-	public void save(Task task) {
+	public Integer save(Task task) {
 		taskValidator.validateData(task, false);
-		taskRepository.save(task);
+		task.getTaskMtmJobList().stream().forEach(taskMtmJob -> taskMtmJob.setTaskId(task));
+		return taskRepository.save(task).getId();
 	}
 
 	@Transactional
@@ -53,8 +54,13 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public void update(Task task) {
-		taskValidator.validateData(task, false);
-		taskRepository.save(task);
+		try {			
+			taskValidator.validateData(task, false);
+			task.getTaskMtmJobList().stream().forEach(taskMtmJob -> taskMtmJob.setTaskId(task));
+			taskRepository.save(task);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -65,6 +71,11 @@ public class TaskServiceImpl implements TaskService {
 			return task.get();
 		}
 		throw new NotFoundException(ValidateMessage.NOT_FOUND.getDescription());
+	}
+
+	@Override
+	public List<Task> findByJob(Integer id) throws NotFoundException {
+		return taskRepository.findAllByJob(id);
 	}
 
 }

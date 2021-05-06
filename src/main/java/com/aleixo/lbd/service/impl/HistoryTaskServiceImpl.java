@@ -84,4 +84,9 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 		historyTaskRepository.deleteAll(historyTaskList);
 	}
 
+	@Override
+	public List<HistoryTask> findByUser(Integer id) throws NotFoundException {
+		return historyTaskRepository.findAllHistoryTasksByUser(id);
+	}
+
 }

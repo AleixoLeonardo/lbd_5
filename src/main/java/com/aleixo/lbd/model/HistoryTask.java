@@ -7,6 +7,7 @@ package com.aleixo.lbd.model;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.aleixo.lbd.rest.view.HistoryTaskView;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  *
@@ -43,10 +48,13 @@ public class HistoryTask implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @Column(name = "history_date")
+    @JsonView(HistoryTaskView.HistoryTaskResume.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     private Date historyDate;
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @JsonView(HistoryTaskView.HistoryTaskResume.class)
     private Task taskId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)

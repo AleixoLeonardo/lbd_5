@@ -16,7 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.aleixo.lbd.exception.NotFoundException;
 import com.aleixo.lbd.exception.ValidateException;
 import com.aleixo.lbd.model.HistoryTask;
+import com.aleixo.lbd.rest.view.HistoryTaskView;
 import com.aleixo.lbd.service.HistoryTaskService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 @RequestMapping("/history_task")
@@ -55,6 +57,16 @@ public class HistoryTaskController {
 	public ResponseEntity<HistoryTask> findById(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<HistoryTask>(historyTaskService.findById(id), HttpStatus.OK);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+		}
+	}
+	
+	@RequestMapping(path = "/user/{id}", method = RequestMethod.GET)
+	@JsonView(HistoryTaskView.HistoryTaskResume.class)
+	public ResponseEntity<List<HistoryTask>> findByUser(@PathVariable Integer id) {
+		try {
+			return new ResponseEntity<List<HistoryTask>>(historyTaskService.findByUser(id), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}

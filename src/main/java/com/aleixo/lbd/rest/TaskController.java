@@ -31,8 +31,7 @@ public class TaskController {
 	@RequestMapping(path = "/", method = RequestMethod.POST)
 	public ResponseEntity<String> create(@RequestBody Task task) {
 		try {
-			taskService.save(task);
-			return new ResponseEntity<String>("", HttpStatus.OK);
+			return new ResponseEntity<String>(taskService.save(task).toString(), HttpStatus.OK);
 		} catch (ValidateException e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
@@ -59,6 +58,16 @@ public class TaskController {
 	public ResponseEntity<Task> findById(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<Task>(taskService.findById(id), HttpStatus.OK);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+		}
+	}
+	
+	@RequestMapping(path = "job/{id}", method = RequestMethod.GET)
+	@JsonView(TaskView.TaskFull.class)
+	public ResponseEntity<List<Task>> findByUserJob(@PathVariable Integer id) {
+		try {
+			return new ResponseEntity<List<Task>>(taskService.findByJob(id), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}

@@ -8,7 +8,6 @@ package com.aleixo.lbd.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +22,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.aleixo.lbd.rest.view.TaskMtmJobView;
+import com.aleixo.lbd.rest.view.HistoryTaskView;
 import com.aleixo.lbd.rest.view.TaskView;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -35,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "task")
 @XmlRootElement
-@JsonIgnoreProperties({"historyTaskList", "taskMtmJobList"}) 
+@JsonIgnoreProperties({"historyTaskList"}) 
 @NamedQueries({ @NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t"),
 		@NamedQuery(name = "Task.findById", query = "SELECT t FROM Task t WHERE t.id = :id"),
 		@NamedQuery(name = "Task.findByName", query = "SELECT t FROM Task t WHERE t.name = :name") })
@@ -44,18 +43,15 @@ public class Task implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonView({ TaskView.TaskResume.class})
-	@Basic(optional = false)
+	@JsonView({TaskView.TaskResume.class, HistoryTaskView.HistoryTaskResume.class})
 	@Column(name = "id")
 	private Integer id;
-	@Basic(optional = false)
 	@Column(name = "name")
-	@JsonView(TaskView.TaskResume.class)
+	@JsonView({TaskView.TaskResume.class, HistoryTaskView.HistoryTaskResume.class})
 	private String name;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
 	private List<HistoryTask> historyTaskList;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId", fetch = FetchType.EAGER)
-	@JsonView({TaskView.TaskFull.class, TaskMtmJobView.TaskMtmJobFull.class})
 	private List<TaskMtmJob> taskMtmJobList;
 
 	public Task() {
