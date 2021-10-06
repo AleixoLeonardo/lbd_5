@@ -1,11 +1,11 @@
 package com.aleixo.lbd.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.aleixo.lbd.constants.ValidateMessage;
@@ -32,6 +32,7 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public void delete(Integer id) throws NotFoundException {
 		Optional<HistoryTask> historyTask = historyTaskRepository.findById(id);
 		if (historyTask.isPresent()) {
@@ -42,6 +43,7 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public List<HistoryTask> findAll() {
 		return historyTaskRepository.findAllHistoryTasks();
 	}
@@ -53,6 +55,7 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public void deleteAllByUser(Integer userId) {
 		List<HistoryTask> historyTaskList = historyTaskRepository.findAllHistoryTasksByUser(userId);
 		if (null != historyTaskList && !historyTaskList.isEmpty()) {
@@ -61,6 +64,7 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public HistoryTask findById(Integer id) throws NotFoundException {
 		Optional<HistoryTask> historyTask = historyTaskRepository.findById(id);
 		if (historyTask.isPresent()) {
@@ -70,21 +74,23 @@ public class HistoryTaskServiceImpl implements HistoryTaskService {
 	}
 
 	@Override
-	public List<HistoryTask> findByIdTaskPeriod(Integer taskId, String start, String end) throws NotFoundException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	@PreAuthorize("isAuthenticated()")
+	public List<HistoryTask> findByIdTaskPeriod(Integer taskId, Long start, Long end) throws NotFoundException {
 		try {
-			return historyTaskRepository.findAllByTaskIdPeriod(taskId, sdf.parse(start), sdf.parse(end));
-		} catch (ParseException e) {
-			throw new ValidateException(ValidateMessage.PARSE_ERROR.getDescription());
+			return historyTaskRepository.findAllByTaskIdPeriod(taskId, new Date(start), new Date(end));
+		} catch (Exception e) {
+			throw new ValidateException(ValidateMessage.INVALID_DATA_ERROR.getDescription());
 		}
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public void delete(List<HistoryTask> historyTaskList) throws NotFoundException {
 		historyTaskRepository.deleteAll(historyTaskList);
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public List<HistoryTask> findByUser(Integer id) throws NotFoundException {
 		return historyTaskRepository.findAllHistoryTasksByUser(id);
 	}

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aleixo.lbd.exception.ValidateException;
+import com.aleixo.lbd.model.User;
 import com.aleixo.lbd.security.JWTUtils;
 import com.aleixo.lbd.security.Login;
 import com.aleixo.lbd.security.SecurityServiceImpl;
@@ -37,7 +38,10 @@ public class LoginController {
 			Authentication auth = new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
 			authenticationManager.authenticate(auth);
 			login.setPassword(null);
-			login.setToken(JWTUtils.generateToken(auth, securityServiceImpl.loadUserByUsername(login.getUsername())));
+			User user = securityServiceImpl.loadUserByUsername(login.getUsername());
+			login.setToken(JWTUtils.generateToken(auth, user));
+			login.setAutorizacao(user.getRole());
+			login.setId(user.getId());
 			return new ResponseEntity<Login>(login, HttpStatus.OK);
 		} catch (ValidateException e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

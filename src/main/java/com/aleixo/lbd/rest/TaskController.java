@@ -64,7 +64,7 @@ public class TaskController {
 	}
 	
 	@RequestMapping(path = "job/{id}", method = RequestMethod.GET)
-	@JsonView(TaskView.TaskFull.class)
+	@JsonView(TaskView.TaskResume.class)
 	public ResponseEntity<List<Task>> findByUserJob(@PathVariable Integer id) {
 		try {
 			return new ResponseEntity<List<Task>>(taskService.findByJob(id), HttpStatus.OK);

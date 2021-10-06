@@ -6,7 +6,9 @@
 package com.aleixo.lbd.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -16,6 +18,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -24,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.aleixo.lbd.rest.view.JobView;
+import com.aleixo.lbd.rest.view.TaskView;
 import com.aleixo.lbd.rest.view.UserView;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -42,26 +46,26 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class Job implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonView({ JobView.JobResume.class, UserView.UserFull.class })
+	@JsonView({ JobView.JobResume.class, UserView.UserFull.class, TaskView.TaskResume.class  })
 	@Basic(optional = false)
 	@Column(name = "id")
 	private Integer id;
 
 	@Basic(optional = false)
 	@Column(name = "name")
-	@JsonView({ JobView.JobResume.class, UserView.UserFull.class })
+	@JsonView({ JobView.JobResume.class, UserView.UserFull.class, TaskView.TaskResume.class })
 	private String name;
-
+	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jobId", fetch = FetchType.EAGER)
 	@JsonView(JobView.JobFull.class)
 	private List<User> userList;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "jobId", fetch = FetchType.LAZY)
-	@JsonView(JobView.JobFull.class)
-	private List<TaskMtmJob> taskMtmJobList;
+	
+	@JsonView({ TaskView.TaskFull.class })
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "jobs", cascade = { CascadeType.MERGE, CascadeType.REFRESH })
+	private Set<Task> tasks = new HashSet<Task>();
 
 	public Job() {
 	}
@@ -91,6 +95,14 @@ public class Job implements Serializable {
 		this.name = name;
 	}
 
+	public Set<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
+	}
+
 	@XmlTransient
 	public List<User> getUserList() {
 		return userList;
@@ -98,35 +110,6 @@ public class Job implements Serializable {
 
 	public void setUserList(List<User> userList) {
 		this.userList = userList;
-	}
-
-	@XmlTransient
-	public List<TaskMtmJob> getTaskMtmJobList() {
-		return taskMtmJobList;
-	}
-
-	public void setTaskMtmJobList(List<TaskMtmJob> taskMtmJobList) {
-		this.taskMtmJobList = taskMtmJobList;
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Job)) {
-			return false;
-		}
-		Job other = (Job) object;
-		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-			return false;
-		}
-		return true;
 	}
 
 	@Override

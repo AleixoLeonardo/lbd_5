@@ -73,8 +73,9 @@ public class HistoryTaskController {
 	}
 
 	@RequestMapping(path = "/{idTask}/inicio/{start}/fim/{end}", method = RequestMethod.GET)
+	@JsonView(HistoryTaskView.HistoryTaskResume.class)
 	public ResponseEntity<List<HistoryTask>> findByIdTaskPeriod(@PathVariable Integer idTask,
-			@PathVariable String start, @PathVariable String end) {
+			@PathVariable Long start, @PathVariable Long end) {
 		try {
 			return new ResponseEntity<List<HistoryTask>>(historyTaskService.findByIdTaskPeriod(idTask, start, end),
 					HttpStatus.OK);

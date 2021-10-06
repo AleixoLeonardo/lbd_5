@@ -14,6 +14,6 @@ public interface TaskRepository extends CrudRepository<Task, Integer> {
 	@Query(value = "SELECT t FROM Task t")
 	List<Task> findAllTasks();
 	
-	@Query(value = "SELECT t FROM Task t JOIN t.taskMtmJobList tmj WHERE tmj.taskId.id = :jobId")
+	@Query(value = "SELECT t FROM Task t INNER JOIN t.jobs j WHERE j.id = :jobId")
 	List<Task> findAllByJob(@Param("jobId") Integer id);
 }

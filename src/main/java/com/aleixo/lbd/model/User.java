@@ -28,6 +28,7 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.aleixo.lbd.rest.view.HistoryTaskView;
 import com.aleixo.lbd.rest.view.UserView;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -48,14 +49,14 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@JsonView(UserView.UserResume.class)
+	@JsonView({ UserView.UserResume.class, HistoryTaskView.HistoryTaskResume.class })
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "id")
 	private Integer id;
 
-	@JsonView(UserView.UserResume.class)
+	@JsonView({ UserView.UserResume.class, HistoryTaskView.HistoryTaskResume.class })
 	@Basic(optional = false)
 	@Column(name = "name")
 	private String name;

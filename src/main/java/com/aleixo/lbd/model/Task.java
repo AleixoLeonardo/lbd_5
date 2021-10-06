@@ -7,6 +7,7 @@ package com.aleixo.lbd.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -34,25 +38,33 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "task")
 @XmlRootElement
-@JsonIgnoreProperties({"historyTaskList"}) 
+@JsonIgnoreProperties({ "historyTaskList" })
 @NamedQueries({ @NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t"),
 		@NamedQuery(name = "Task.findById", query = "SELECT t FROM Task t WHERE t.id = :id"),
 		@NamedQuery(name = "Task.findByName", query = "SELECT t FROM Task t WHERE t.name = :name") })
 public class Task implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonView({TaskView.TaskResume.class, HistoryTaskView.HistoryTaskResume.class})
+	@JsonView({ TaskView.TaskResume.class, HistoryTaskView.HistoryTaskResume.class })
 	@Column(name = "id")
 	private Integer id;
+
 	@Column(name = "name")
-	@JsonView({TaskView.TaskResume.class, HistoryTaskView.HistoryTaskResume.class})
+	@JsonView({ TaskView.TaskResume.class, HistoryTaskView.HistoryTaskResume.class })
 	private String name;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
 	private List<HistoryTask> historyTaskList;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId", fetch = FetchType.EAGER)
-	private List<TaskMtmJob> taskMtmJobList;
+
+	@JsonView({ TaskView.TaskResume.class })
+	@ManyToMany(fetch = FetchType.EAGER )
+	@JoinTable(name = "task_mtm_job", 
+		joinColumns = { @JoinColumn(name = "task_id") }, 
+		inverseJoinColumns = { @JoinColumn(name = "job_id") })
+	private Set<Job> jobs;
 
 	public Task() {
 	}
@@ -82,6 +94,14 @@ public class Task implements Serializable {
 		this.name = name;
 	}
 
+	public Set<Job> getJobs() {
+		return jobs;
+	}
+
+	public void setJobs(Set<Job> jobs) {
+		this.jobs = jobs;
+	}
+
 	@XmlTransient
 	public List<HistoryTask> getHistoryTaskList() {
 		return historyTaskList;
@@ -91,39 +111,9 @@ public class Task implements Serializable {
 		this.historyTaskList = historyTaskList;
 	}
 
-	@XmlTransient
-	public List<TaskMtmJob> getTaskMtmJobList() {
-		return taskMtmJobList;
-	}
-
-	public void setTaskMtmJobList(List<TaskMtmJob> taskMtmJobList) {
-		this.taskMtmJobList = taskMtmJobList;
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Task)) {
-			return false;
-		}
-		Task other = (Task) object;
-		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-			return false;
-		}
-		return true;
-	}
-
 	@Override
 	public String toString() {
 		return "br.com.fd.habiliteme.manager.model.Task[ id=" + id + " ]";
 	}
 
 }
-

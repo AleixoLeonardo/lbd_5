@@ -34,99 +34,111 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "history_task")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "HistoryTask.findAll", query = "SELECT h FROM HistoryTask h")
-    , @NamedQuery(name = "HistoryTask.findById", query = "SELECT h FROM HistoryTask h WHERE h.id = :id")
-    , @NamedQuery(name = "HistoryTask.findByHistoryDate", query = "SELECT h FROM HistoryTask h WHERE h.historyDate = :historyDate")})
+@NamedQueries({ @NamedQuery(name = "HistoryTask.findAll", query = "SELECT h FROM HistoryTask h"),
+		@NamedQuery(name = "HistoryTask.findById", query = "SELECT h FROM HistoryTask h WHERE h.id = :id"),
+		@NamedQuery(name = "HistoryTask.findByHistoryDate", query = "SELECT h FROM HistoryTask h WHERE h.historyDate = :historyDate") })
 public class HistoryTask implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Basic(optional = false)
-    @Column(name = "history_date")
-    @JsonView(HistoryTaskView.HistoryTaskResume.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date historyDate;
-    @JoinColumn(name = "task_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    @JsonView(HistoryTaskView.HistoryTaskResume.class)
-    private Task taskId;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private User userId;
+	private static final long serialVersionUID = 1L;
+	@JsonView(HistoryTaskView.HistoryTaskResume.class)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "id")
+	private Integer id;
+	@Basic(optional = false)
+	@Column(name = "history_date")
+	@JsonView(HistoryTaskView.HistoryTaskResume.class)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date historyDate;
+	@JoinColumn(name = "task_id", referencedColumnName = "id")
+	@ManyToOne(optional = false)
+	@JsonView(HistoryTaskView.HistoryTaskResume.class)
+	private Task taskId;
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@ManyToOne(optional = false)
+	@JsonView(HistoryTaskView.HistoryTaskResume.class)
+	private User userId;
+	@JsonView(HistoryTaskView.HistoryTaskResume.class)
+	@Column(name = "message", length = 100)
+	private String message;
 
-    public HistoryTask() {
-    }
+	public HistoryTask() {
+	}
 
-    public HistoryTask(Integer id) {
-        this.id = id;
-    }
+	public HistoryTask(Integer id) {
+		this.id = id;
+	}
 
-    public HistoryTask(Integer id, Date historyDate) {
-        this.id = id;
-        this.historyDate = historyDate;
-    }
+	public HistoryTask(Integer id, Date historyDate) {
+		this.id = id;
+		this.historyDate = historyDate;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Date getHistoryDate() {
-        return historyDate;
-    }
+	public Date getHistoryDate() {
+		return historyDate;
+	}
 
-    public void setHistoryDate(Date historyDate) {
-        this.historyDate = historyDate;
-    }
+	public void setHistoryDate(Date historyDate) {
+		this.historyDate = historyDate;
+	}
 
-    public Task getTaskId() {
-        return taskId;
-    }
+	public Task getTaskId() {
+		return taskId;
+	}
 
-    public void setTaskId(Task taskId) {
-        this.taskId = taskId;
-    }
+	public void setTaskId(Task taskId) {
+		this.taskId = taskId;
+	}
 
-    public User getUserId() {
-        return userId;
-    }
+	public User getUserId() {
+		return userId;
+	}
 
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
+	public void setUserId(User userId) {
+		this.userId = userId;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof HistoryTask)) {
-            return false;
-        }
-        HistoryTask other = (HistoryTask) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    @Override
-    public String toString() {
-        return "br.com.fd.habiliteme.manager.model.HistoryTask[ id=" + id + " ]";
-    }
-    
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are not set
+		if (!(object instanceof HistoryTask)) {
+			return false;
+		}
+		HistoryTask other = (HistoryTask) object;
+		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "br.com.fd.habiliteme.manager.model.HistoryTask[ id=" + id + " ]";
+	}
+
 }

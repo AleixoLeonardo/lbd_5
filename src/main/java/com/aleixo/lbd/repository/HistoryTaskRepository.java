@@ -24,6 +24,4 @@ public interface HistoryTaskRepository extends CrudRepository<HistoryTask, Integ
 	@Query(value = "SELECT h FROM HistoryTask h WHERE h.userId.role = :role")
 	List<HistoryTask> findAllByRole(@Param("role") String role);
 	
-	@Query(value = "SELECT h FROM HistoryTask h JOIN h.taskId.taskMtmJobList tmj WHERE tmj.jobId.id = :jobId")
-	List<HistoryTask> findAllByJob(@Param("jobId") Integer jobId);
 }

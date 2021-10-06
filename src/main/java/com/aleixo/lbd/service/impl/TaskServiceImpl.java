@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.aleixo.lbd.constants.ValidateMessage;
@@ -30,13 +31,19 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Override
 	public Integer save(Task task) {
-		taskValidator.validateData(task, false);
-		task.getTaskMtmJobList().stream().forEach(taskMtmJob -> taskMtmJob.setTaskId(task));
-		return taskRepository.save(task).getId();
+		try {			
+			taskValidator.validateData(task, false);
+			
+			return taskRepository.save(task).getId();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Transactional
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public void delete(Integer id) throws NotFoundException {
 		Optional<Task> task = taskRepository.findById(id);
 		if (task.isPresent()) {
@@ -48,6 +55,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public List<Task> findAll() {
 		return taskRepository.findAllTasks();
 	}
@@ -56,7 +64,7 @@ public class TaskServiceImpl implements TaskService {
 	public void update(Task task) {
 		try {			
 			taskValidator.validateData(task, false);
-			task.getTaskMtmJobList().stream().forEach(taskMtmJob -> taskMtmJob.setTaskId(task));
+			
 			taskRepository.save(task);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -64,16 +72,17 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public Task findById(Integer id) throws NotFoundException {
 		Optional<Task> task = taskRepository.findById(id);
 		if (task.isPresent()) {
-			task.get().getTaskMtmJobList();
 			return task.get();
 		}
 		throw new NotFoundException(ValidateMessage.NOT_FOUND.getDescription());
 	}
 
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public List<Task> findByJob(Integer id) throws NotFoundException {
 		return taskRepository.findAllByJob(id);
 	}
